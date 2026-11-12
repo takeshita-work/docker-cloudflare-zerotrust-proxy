@@ -1,0 +1,2 @@
+# 改行は LF に固定する (core.autocrlf の設定に関わらず、作業ファイルも LF)
+* text=auto eol=lf
