@@ -1,0 +1,27 @@
+# 名称は .env の CONTAINER_NAME で変えられる (プロジェクト名・コンテナ名・ホスト名に使う)
+# 既定値を変える場合は、下の 3 か所と scripts/_common.ps1 の $Container を同じ値にする
+name: ${CONTAINER_NAME:-cloudflare-zerotrust-proxy}
+
+services:
+  warp:
+    build: .
+    image: cloudflare-zerotrust-proxy:latest
+    container_name: ${CONTAINER_NAME:-cloudflare-zerotrust-proxy}
+    hostname: ${CONTAINER_NAME:-cloudflare-zerotrust-proxy}
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: 0
+      net.ipv4.conf.all.src_valid_mark: 1
+    ports:
+      # SOCKS5 プロキシ。ホストのループバックにのみ公開
+      - "127.0.0.1:${SOCKS_PORT:-1080}:1080"
+    volumes:
+      # デバイス登録情報の永続化
+      - warp-data:/var/lib/cloudflare-warp
+
+volumes:
+  warp-data:

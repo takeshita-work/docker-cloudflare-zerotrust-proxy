@@ -1,0 +1,3 @@
+# 環境固有の設定 (ひな形は .ssh/config.example と docker/.env.example)
+/.ssh/config
+/docker/.env
